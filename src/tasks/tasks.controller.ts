@@ -12,6 +12,7 @@ import {
   ValidationPipe,
   ParseIntPipe,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task-status.enum';
@@ -27,12 +28,18 @@ import { GetUser } from 'src/auth/get-user.decorator';
 @UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
+  private logger = new Logger('TaskController');
 
   @Get()
   async getTasks(
     @Query(ValidationPipe) filterDto: GetTaskFilteredDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
+    this.logger.verbose(
+      `User "${user.username}" retreiving all tasks. Filters ${JSON.stringify(
+        filterDto,
+      )}`,
+    );
     return await this.tasksService.getTasks(filterDto, user);
   }
 
@@ -50,6 +57,11 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
+    this.logger.verbose(
+      `User ${user.username} creating a new task. Data: ${JSON.stringify(
+        createTaskDto,
+      )}`,
+    );
     return this.tasksService.createTask(createTaskDto, user);
   }
 
@@ -58,6 +70,7 @@ export class TasksController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<void> {
+    this.logger.verbose(`User ${user.username} deleting task of ID ${id}`);
     await this.tasksService.deleteTask(id, user);
   }
 
