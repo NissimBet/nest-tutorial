@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserRepository } from './user.repository';
+import { CONFIG } from 'src/config/env.config';
 
 /**
  * Definir un modulo para ralizar las autenticaciones
@@ -20,7 +21,7 @@ import { UserRepository } from './user.repository';
     }),
     // inyectar el modulo de manejo de jwt de nest, con el secret (esencialmente deberia ser secreto, random y no como esta aca) y los settings de firmado de los jwt
     JwtModule.register({
-      secret: 'SECRET',
+      secret: CONFIG.SECRET,
       signOptions: {
         expiresIn: 3600,
       },

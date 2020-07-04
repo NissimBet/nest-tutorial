@@ -5,6 +5,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
+import { CONFIG } from 'src/config/env.config';
 
 /**
  * Estrategia de manejo del token 'jwt' en los requests por medio del AuthGuard.
@@ -20,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // La configuracion indica que se va a extraer el token tipo Bearer del header de autenticacion con el secret para la decodificacion y verificacion
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'SECRET',
+      secretOrKey: CONFIG.SECRET,
     });
   }
 
